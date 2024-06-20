@@ -1,0 +1,20 @@
+.gradr-delete-comment {
+  display: none;
+}
+
+.gradr-comment:hover .gradr-delete-comment {
+  display: block;
+}
+
+.gradr-comment {
+  font-size: 0.8rem;
+  line-height: 1.1em;
+}
+
+.gradr-comment p {
+  padding-bottom: 0.5em;
+}
+
+.gradr-comment p:last-child {
+  padding-bottom: 0;
+}

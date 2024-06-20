@@ -1,0 +1,63 @@
+span.gradr-hl {
+  display: inline;
+  cursor: pointer;
+}
+
+div.gradr-hl {
+  cursor: pointer;
+  position: relative;
+}
+
+div.gradr-hl::after {
+  content: '';
+  inset: 0;
+  background: yellow;
+  position: absolute;
+  opacity: 0.4;
+}
+.gradr-hl,
+.gradr-hl > *:not(.gradr-hl) {
+  background-color: yellow;
+}
+
+img {
+  cursor: pointer;
+}
+
+a[href*='http'] {
+  pointer-events: none;
+}
+
+h1,
+h2,
+h3 {
+  padding-top: 1em;
+  padding-bottom: 0.5em;
+  font-weight: bold;
+}
+
+h1 {
+  @apply text-2xl;
+}
+h2 {
+  @apply text-xl;
+}
+h3 {
+  @apply text-lg;
+}
+h4 {
+  padding-block: 0.5em;
+}
+p {
+  padding-bottom: 1em;
+}
+pre {
+  @apply p-1 mb-4 bg-slate-100 text-sm overflow-auto;
+}
+pre::-webkit-scrollbar {
+  @apply w-1 h-1;
+}
+pre::-webkit-scrollbar-thumb {
+  @apply bg-gray-500 rounded-xl hidden;
+  border: solid 2px #334155;
+}

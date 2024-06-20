@@ -1,0 +1,55 @@
+/* for Rmd */
+body {
+  display: flex;
+  background: #334155;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.main-container {
+  background-color: white;
+  box-shadow: 0 0 5px #000;
+  margin: 3px;
+  flex-grow: 1;
+  flex-basis: 750px;
+}
+
+.gradr-comments-export {
+  position: relative;
+  min-width: 150px;
+  padding: 5px;
+  flex-grow: 2;
+  max-width: 350px;
+  flex-basis: 45%;
+}
+
+.gradr-comment {
+  position: absolute;
+  width: calc(100% - 20px);
+  background: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px black;
+}
+
+span.gradr-hl {
+  display: inline;
+  cursor: pointer;
+}
+.gradr-hl,
+.gradr-hl > *:not(.gradr-hl) {
+  background-color: yellow;
+}
+
+div.gradr-hl {
+  cursor: pointer;
+  position: relative;
+}
+
+div.gradr-hl::after {
+  content: '';
+  inset: 0;
+  background: yellow;
+  position: absolute;
+  opacity: 0.4;
+}

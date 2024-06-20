@@ -1,0 +1,1 @@
+function gpos(){const t=document.querySelectorAll(".gradr-comment");t.forEach(((o,e)=>{const n=o.dataset.id,c=document.querySelector(`.gradr-hl[data-id='${n}']`).getBoundingClientRect().top;if(0===e)return void(o.style.top=c+"px");const d=t[e-1].getBoundingClientRect();const i=d.top+d.height+5;o.style.top=Math.max(c,i)+"px"}))}gpos(),window.onresize=gpos;
