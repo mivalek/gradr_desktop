@@ -36,6 +36,7 @@
     "@electron-toolkit/preload": "^3.0.0",
     "@electron-toolkit/utils": "^3.0.0",
     "@kobalte/core": "^0.13.3",
+    "@solidjs/router": "^0.13.6",
     "@types/jsdom": "^21.1.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",

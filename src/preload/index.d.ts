@@ -1,5 +1,5 @@
 import { ElectronAPI } from '@electron-toolkit/preload'
-import { TOpenFile, TOpenFolder, TSaveFile } from '@shared/types'
+import { TOpenFile, TOpenFolder, TOpenWindow, TSaveFile } from '@shared/types'
 
 declare global {
   interface Window {
@@ -8,6 +8,7 @@ declare global {
       openFolder: TOpenFolder
       openFile: TOpenFile
       saveFile: TSaveFile
+      openWindow: TOpenWindow
     }
   }
 }

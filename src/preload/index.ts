@@ -1,6 +1,6 @@
 import { contextBridge } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
-import { TOpenFile, TSaveFile } from '@shared/types'
+import { TOpenFile, TOpenWindow, TSaveFile } from '@shared/types'
 
 // Custom APIs for renderer
 const api = {
@@ -9,7 +9,9 @@ const api = {
   openFile: async (...args: Parameters<TOpenFile>): Promise<string> =>
     electronAPI.ipcRenderer.invoke('open-file', ...args),
   saveFile: async (...args: Parameters<TSaveFile>): Promise<string> =>
-    electronAPI.ipcRenderer.invoke('save-file', ...args)
+    electronAPI.ipcRenderer.invoke('save-file', ...args),
+  openWindow: (...args: Parameters<TOpenWindow>): void =>
+    electronAPI.ipcRenderer.send('open-window', ...args)
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to
