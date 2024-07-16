@@ -1,0 +1,194 @@
+/* for Rmd */
+body {
+  display: flex;
+  background: #334155;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+}
+
+.main-container,
+#quarto-content {
+  background-color: white;
+  box-shadow: 0 0 5px #000;
+  margin: 3px;
+  flex-grow: 1;
+  flex-basis: 750px;
+}
+
+#quarto-content {
+  max-width: fit-content;
+}
+
+#gradr-comments {
+  position: relative;
+  min-width: 150px;
+  padding: 5px;
+  flex-grow: 2;
+  max-width: 350px;
+  flex-basis: 45%;
+}
+
+.gradr-comment {
+  position: absolute;
+  width: calc(100% - 20px);
+  background: white;
+  border: solid 3px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px black;
+  transition: transform 0.15s ease-in;
+}
+
+.gradr-comment.hovered {
+  transform: scale(1.03);
+}
+.gradr-comment > div {
+  padding: 2px 5px;
+}
+
+.gradr-comment-header {
+  color: white;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.gradr-comment button {
+  visibility: hidden;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  height: 15px;
+  width: 15px;
+  line-height: 1;
+  background: none;
+  color: white;
+  border: solid 1px white;
+  border-radius: 100%;
+  font-size: 12px;
+  font-weight: bold;
+  font-family: 'Times New Roman';
+}
+
+.gradr-comment:hover button {
+  visibility: visible;
+}
+
+span.gradr-hl {
+  display: inline;
+  cursor: pointer;
+}
+
+div.gradr-hl {
+  cursor: pointer;
+  position: relative;
+  width: fit-content;
+  margin: auto;
+}
+
+div.gradr-hl::after {
+  content: '';
+  inset: 0;
+  position: absolute;
+  opacity: 0.5;
+}
+
+div.gradr-hl.hovered::after {
+  opacity: 0.8;
+}
+
+.gradr-data,
+.gradr-tooltip-container {
+  display: none;
+}
+
+.gradr-crit-tooltip.active {
+  position: absolute;
+  background: white;
+  margin: 0 1em;
+  padding: 0.5em;
+  border-radius: 5px;
+  box-shadow: 0px 3px 5px 0px #333;
+}
+
+#gradr-general-comments {
+  box-shadow: 0 0 5px #ccc;
+  padding: 1em 1em 2em 1em;
+  margin-bottom: 1em;
+  border-radius: 5px;
+  & h2 {
+    font-size: 26px;
+    padding-block:;
+    margin-block: 5px 20px;
+    border: none;
+  }
+}
+#gradr-grades-container {
+  display: flex;
+  align-items: center;
+  box-shadow: 0 0 5px #ccc;
+  width: fit-content;
+  border-radius: 5px;
+  margin-bottom: 1em;
+  margin-inline: auto 0;
+}
+
+#gradr-overall-grade {
+  font-size: 5em;
+  padding-inline: 3rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+#quarto-content #gradr-overall-grade {
+  font-weight: 700;
+}
+
+.gradr-grade {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  border: solid 1px;
+  & a {
+    color: white;
+    font-variant: super;
+    cursor: pointer;
+    font-family: 'Times New Roman';
+  }
+}
+
+.gradr-crit-name {
+  color: white;
+  padding: 3px 5px;
+  text-wrap: nowrap;
+}
+
+.gradr-crit-name span {
+  font-size: smaller;
+  margin: 0.5rem;
+}
+
+.gradr-crit-mark {
+  background: white;
+  padding: 3px 5px;
+}
+
+#no-mobile {
+  display: none;
+  background: white;
+  padding: 0.5em;
+  margin: 0.5em;
+  border-radius: 5px;
+  color: #d91212;
+  text-align: center;
+}
+
+@media (width < 600px) {
+  .main-container,
+  #quarto-content,
+  #gradr-comments {
+    display: none;
+  }
+  #no-mobile {
+    display: block;
+  }
+}

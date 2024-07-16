@@ -2,16 +2,16 @@ import './assets/main.css'
 
 import { render } from 'solid-js/web'
 import App from './App'
-import { Route, Router } from '@solidjs/router'
+import { HashRouter, Route } from '@solidjs/router'
 import { Home } from './pages/Home'
 import { Rubric } from './pages/Rubric'
 
 render(
   () => (
-    <Router root={App}>
-      <Route path="/" component={Home} />
-      <Route path="/rubric" component={Rubric} />
-    </Router>
+    <HashRouter root={App}>
+      <Route path="home" component={Home} />
+      <Route path="rubric" component={Rubric} />
+    </HashRouter>
   ),
   document.getElementById('root') as HTMLElement
 )

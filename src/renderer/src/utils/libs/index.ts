@@ -19,11 +19,17 @@ export function highlightSelection(range: Range, uuid: string, setId: Setter<str
 
 function highlightRange(range, id: string, setId: Setter<string | undefined>) {
   const newNode = document.createElement('span')
-  newNode.classList.add('gradr-hl')
+  newNode.classList.add('gradr-hl', 'gradr-crit-cmnt')
   newNode.dataset.id = id
   newNode.addEventListener('click', (e) => {
     e.stopPropagation()
     setId(id)
+  })
+  newNode.addEventListener('pointerover', () => {
+    toggleActiveComment(id)
+  })
+  newNode.addEventListener('pointerout', () => {
+    toggleActiveComment(id, true)
   })
   range.surroundContents(newNode)
 }
@@ -101,7 +107,7 @@ export function positionComments() {
       `#comments-container .gradr-comment[data-id='${id}']`
     ) as HTMLDivElement | null
     if (!comment) return
-    const scrollTop = document.querySelector('#main-panel')!.scrollTop
+    const scrollTop = document.getElementById('main-panel')!.scrollTop
     const defaultTop = hl.getBoundingClientRect().top + scrollTop - 60
     if (i === 0) {
       comment.style.top = defaultTop + 'px'
@@ -114,4 +120,34 @@ export function positionComments() {
     const minTop = prevComment.offsetTop + prevComment.offsetHeight + 5
     comment.style.top = Math.max(defaultTop, minTop) + 'px'
   })
+}
+
+export const toggleActiveComment = (id: string, deactivate: boolean = false) => {
+  const hls = document.querySelectorAll(`.gradr-hl[data-id='${id}']`)
+  const comment = document.querySelector(
+    `#comments-container .gradr-comment[data-id='${id}']`
+  ) as HTMLDivElement | null
+  if (deactivate) {
+    hls.forEach((hl) => hl.classList.remove('hovered'))
+    comment?.classList.remove('hovered')
+  } else {
+    hls.forEach((hl) => hl.classList.add('hovered'))
+    comment?.classList.add('hovered')
+  }
+}
+
+const setCursorEditable = (editableElem: HTMLDivElement, position: number) => {
+  const range = document.createRange()
+  const sel = window.getSelection()!
+  range.setStart(editableElem.childNodes[0], position)
+  range.collapse(true)
+
+  sel.removeAllRanges()
+  sel.addRange(range)
+  editableElem.focus()
+}
+
+export const moveCaretToEnd = (element: HTMLDivElement) => {
+  const contentLength = element.innerText.length
+  setCursorEditable(element, contentLength)
 }

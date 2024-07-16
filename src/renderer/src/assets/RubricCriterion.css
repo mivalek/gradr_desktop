@@ -1,0 +1,41 @@
+.remove-criterion {
+  visibility: hidden;
+}
+
+div:hover > .remove-criterion {
+  visibility: visible;
+}
+
+.colour-picker > * {
+  cursor: pointer;
+}
+
+.colour-picker .colour {
+  visibility: hidden;
+}
+.colour-picker:hover .colour {
+  visibility: visible;
+}
+.colour-picker:hover .colour:first-child {
+  right: 20px;
+}
+
+.colour-picker:hover .colour:nth-child(2) {
+  right: 40px;
+}
+
+.colour-picker:hover .colour:nth-child(3) {
+  right: 60px;
+}
+
+.colour-picker:hover .colour:nth-child(4) {
+  right: 80px;
+}
+
+.colour-picker:hover .colour:nth-child(5) {
+  right: 100px;
+}
+
+.colour-picker:hover .colour:nth-child(6) {
+  right: 120px;
+}

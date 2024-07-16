@@ -1,0 +1,74 @@
+#document {
+  & span.gradr-hl {
+    display: inline;
+    cursor: pointer;
+  }
+
+  & div.gradr-hl {
+    cursor: pointer;
+    position: relative;
+    width: fit-content;
+    margin: auto;
+  }
+
+  & div.gradr-hl::after {
+    content: '';
+    inset: 0;
+    background: yellow;
+    position: absolute;
+    opacity: 0.5;
+  }
+
+  & div.gradr-hl.hovered::after {
+    opacity: 0.8;
+  }
+
+  & .gradr-hl {
+    background-color: yellow;
+  }
+  & .gradr-hl > * {
+    background-color: transparent;
+  }
+
+  & img {
+    cursor: pointer;
+  }
+}
+
+a[href] {
+  pointer-events: none;
+}
+
+#main-panel,
+#rendered-markdown {
+  & ul {
+    list-style-type: disc;
+  }
+  & ol {
+    list-style-type: decimal;
+  }
+  & ul,
+  ol {
+    padding-left: 1rem;
+
+    & ul,
+    ol {
+      padding-left: 0.5rem;
+    }
+  }
+}
+
+pre {
+  @apply p-1 mb-4 bg-slate-100 text-sm overflow-auto;
+}
+pre::-webkit-scrollbar {
+  @apply w-1 h-1;
+}
+pre::-webkit-scrollbar-thumb {
+  @apply bg-gray-500 rounded-xl hidden;
+  border: solid 2px #334155;
+}
+
+blockquote {
+  @apply pl-1 border-l-2 border-slate-700 text-slate-700 italic mb-2;
+}

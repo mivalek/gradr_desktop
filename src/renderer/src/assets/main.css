@@ -67,12 +67,53 @@
   }
 }
 
+h1,
+h2,
+h3 {
+  padding-top: 1em;
+  padding-bottom: 0.5em;
+  font-weight: bold;
+}
+
+h1 {
+  @apply text-2xl;
+}
+h2 {
+  @apply text-xl;
+}
+h3 {
+  @apply text-lg;
+}
+h4 {
+  padding-block: 0.5em;
+}
+p {
+  padding-bottom: 1em;
+}
+pre {
+  @apply p-1 mb-4 bg-slate-100 text-sm overflow-auto;
+}
+pre::-webkit-scrollbar {
+  @apply w-1 h-1;
+}
+pre::-webkit-scrollbar-thumb {
+  @apply bg-gray-500 rounded-xl hidden;
+  border: solid 2px #334155;
+}
+
+.gradr-rendered-markdown p {
+  padding-bottom: 1.5em;
+  &:last-child {
+    padding-bottom: 0;
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground select-none;
+    @apply bg-transparent text-foreground select-none;
   }
   #titleBarContainer .draggable {
     app-region: drag;
@@ -84,18 +125,20 @@
     -webkit-app-region: no-drag;
   }
   ::-webkit-scrollbar {
-    @apply w-2 h-2;
+    @apply w-1 h-1;
     background: transparent !important;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    @apply bg-accent rounded-xl hidden;
-    border: solid 2px #334155;
   }
 
   ::-webkit-scrollbar-corner,
   ::-webkit-scrollbar-track {
     background: transparent !important;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-950/50 rounded-xl hidden;
+  }
+  ::-webkit-scrollbar-button {
+    @apply bg-transparent h-0.5;
   }
 
   :hover::-webkit-scrollbar-thumb {

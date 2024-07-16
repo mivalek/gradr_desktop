@@ -1,40 +1,32 @@
-import { highlightSelection } from '@renderer/utils/libs'
-import { Accessor, Component, Setter, createEffect, createResource } from 'solid-js'
+import { highlightSelection, toggleActiveComment } from '@renderer/utils/libs'
+import { Component, createEffect, useContext } from 'solid-js'
 
-import '../assets/Reader.css'
-import { TComment, TMathsWindow, TMetadata } from '@shared/types'
-import { SetStoreFunction } from 'solid-js/store'
+import '../assets/Document.css'
+import { Context } from '@/components'
+import { TMathsWindow } from '@shared/types'
 
-type ReaderProps = {
-  fileName: Accessor<string | undefined>
-  path: Accessor<string | undefined>
-  setCurrentId: Setter<string | undefined>
-  setCommentStore: SetStoreFunction<{
-    commentCount: number
-    comments: TComment[]
-  }>
-}
+export const Document: Component = () => {
+  const { setCurrentId, resource } = useContext(Context)!
 
-export const Reader: Component<ReaderProps> = (props) => {
-  const { fileName, setCurrentId, setCommentStore } = props
-  const [resource] = createResource(fileName, async (file) => {
-    if (!fileName()) return { content: '', parsedMetadata: { comments: [], grade: {} } }
-    const { content, metadata } = await window.api.openFile(file)
-    const parsedMetadata: TMetadata = metadata ? JSON.parse(metadata) : { comments: [], grade: {} }
-    return { content, parsedMetadata }
-  })
   let contentElement!: HTMLDivElement
-  createEffect(async () => {
-    if (!resource()) return
-    const contentText = resource()!.content
+  createEffect(() => {
+    const contentText = resource()?.content
     if (contentText) {
       contentElement!.innerHTML = contentText
       contentElement.querySelectorAll('.gradr-hl').forEach((hl) => {
         const id = (hl as HTMLElement).dataset.id!
         hl.addEventListener('click', (e) => handleHighlightClick(e as MouseEvent, id))
+        hl.addEventListener('pointerover', () => {
+          toggleActiveComment(id)
+        })
+        hl.addEventListener('pointerout', () => {
+          toggleActiveComment(id, true)
+        })
       })
+      contentElement
+        .querySelectorAll("a[href*='http']")
+        .forEach((a) => a.setAttribute('tabindex', '-1'))
       ;(window as TMathsWindow).renderMathInElement(contentElement)
-      setCommentStore('comments', resource()!.parsedMetadata.comments)
     }
   })
 
@@ -47,6 +39,8 @@ export const Reader: Component<ReaderProps> = (props) => {
     const userSelection = window.getSelection()
     const selectionRange = userSelection?.getRangeAt(0)
     const uuid = window.crypto.randomUUID()
+    const DocumentPanel = document.getElementById('main-panel')!
+    const scrollTop = DocumentPanel?.scrollTop
     if (!selectionRange?.toString()) {
       if (e.target.tagName !== 'IMG') {
         setCurrentId()
@@ -55,19 +49,23 @@ export const Reader: Component<ReaderProps> = (props) => {
       const img = e.target as HTMLImageElement
       if (img.parentElement?.classList.contains('gradr-hl')) return
       const wrapper = document.createElement('div')
-      wrapper.classList.add('gradr-hl')
+      wrapper.classList.add('gradr-hl', 'gradr-crit-cmnt')
       wrapper.dataset.id = uuid
       img.insertAdjacentElement('beforebegin', wrapper)
       wrapper.appendChild(img)
       wrapper.addEventListener('click', (e) => handleHighlightClick(e, uuid))
-      // img.replaceWith(`<div class="gradr-hl" data-id="${uuid}">${img.outerHTML}</div>`)
-      // e.target.classList.add('gradr-hl')
-      // e.target.setAttribute('data-id', uuid)
+      wrapper.addEventListener('pointerover', () => {
+        toggleActiveComment(uuid)
+      })
+      wrapper.addEventListener('pointerout', () => {
+        toggleActiveComment(uuid, true)
+      })
     } else {
       highlightSelection(selectionRange, uuid, setCurrentId)
       userSelection?.removeAllRanges()
     }
     setCurrentId(uuid)
+    DocumentPanel.scroll(0, scrollTop)
   }
 
   function handleHighlightClick(e: MouseEvent, id: string) {
@@ -76,7 +74,7 @@ export const Reader: Component<ReaderProps> = (props) => {
   }
 
   return (
-    <div id="reader">
+    <div id="document">
       <div
         ref={contentElement}
         id="file-container"

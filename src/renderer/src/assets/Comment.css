@@ -11,10 +11,33 @@
   line-height: 1.1em;
 }
 
-.gradr-comment p {
-  padding-bottom: 0.5em;
-}
+.gradr-comment,
+#rendered-markdown {
+  & .gradr-comment p {
+    padding-bottom: 0.5em;
+  }
 
-.gradr-comment p:last-child {
-  padding-bottom: 0;
+  & .gradr-comment p:last-child {
+    padding-bottom: 0;
+  }
+
+  & h1,
+  h2,
+  h3 {
+    @apply pb-1 font-semibold;
+  }
+
+  & h1 {
+    @apply text-lg;
+  }
+  & h2 {
+    @apply text-base;
+  }
+  & p {
+    padding-bottom: 1em;
+
+    &:last-child {
+      padding: 0;
+    }
+  }
 }
