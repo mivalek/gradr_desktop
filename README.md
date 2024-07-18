@@ -50,7 +50,7 @@ This will create a `dist` folder in your directory where you will find the insta
 
 ## Demo
 
-[](https://www.youtube.com/watch?v=Cs-UpLl7oaU)
+[![gradR demo](https://mival.netlify.app/img/gradR_demo_pic.png)](https://www.youtube.com/watch?v=Cs-UpLl7oaU)
 
 ---
 
