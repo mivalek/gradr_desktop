@@ -12,7 +12,6 @@ type CommentProps = {
 }
 
 export const CommentsPanel: Component<CommentProps> = (props) => {
-  const { rubric } = props
   const { currentId, markFileAsDone, resource, commentStore, setCommentStore } =
     useContext(Context)!
 
@@ -41,7 +40,11 @@ export const CommentsPanel: Component<CommentProps> = (props) => {
 
   createEffect(() => {
     if (resource.state !== 'ready') return
-    setCommentStore('comments', resource()!.comments)
+    const desanitisedComments = resource().comments.map((c) => {
+      const newContent = c.content.replaceAll(/\n&gt;/g, '\n>') // desanitise block quote
+      return { ...c, content: newContent }
+    })
+    setCommentStore('comments', desanitisedComments)
     // nesting avoids multiple renders
     createEffect(() => {
       const commentsCount = commentStore.comments.length
@@ -86,7 +89,7 @@ export const CommentsPanel: Component<CommentProps> = (props) => {
               comment={com}
               currentId={currentId()}
               setCommentStore={setCommentStore}
-              rubric={rubric}
+              rubric={props.rubric}
               basicTypes={basicTypes}
             />
           )}
@@ -99,7 +102,7 @@ export const CommentsPanel: Component<CommentProps> = (props) => {
               <div class={`gradr-comment gradr-crit-${com.type}`} data-id={com.id}>
                 <Show when={com.type !== 'cmnt'}>
                   <div class="gradr-comment-header">
-                    {basicTypes.concat(rubric).find((c) => c.label === com.type)?.name}
+                    {basicTypes.concat(props.rubric).find((c) => c.label === com.type)?.name}
                   </div>
                   <Show when={!['good', 'attn', 'prob'].includes(com.type)}>
                     <button data-crit={com.type}>?</button>
@@ -108,7 +111,7 @@ export const CommentsPanel: Component<CommentProps> = (props) => {
                 <SolidMarkdown
                   children={com.content}
                   remarkPlugins={[remarkMath]}
-                  // @ts-ignore:
+                  // @ts-ignore: no types for rehypeKatex
                   rehypePlugins={[rehypeKatex]}
                 />
               </div>
