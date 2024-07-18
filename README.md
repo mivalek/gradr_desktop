@@ -13,7 +13,7 @@ I wished for a piece of software that would make it easy to import a grading rub
 > [!WARNING]
 > This software comes with no warranties whatsoever
 
-The simplest way of installing `gradR` is to download the installers for [Windows](), [MacOS](), or [Linux](). However, the beauty of open source software is that you can download the source code by cloning this GiiHub repository and build the app yourself.
+The simplest way of installing `gradR` is to download the installers for [Windows](), [MacOS](), or [Linux](). However, the beauty of open source software is that you can download the source code by cloning this GitHub repository and build the app yourself.
 
 To do that, you will need to install [Node.js](https://nodejs.org/en) and [yarn](https://classic.yarnpkg.com/en/docs/install). Once you've done that, you can easily install all the dependency packages `gradR` uses by navigating to the directory where you cloned this repo in your shell/terminal of choice and running the command:
 
@@ -49,6 +49,8 @@ This will create a `dist` folder in your directory where you will find the insta
 - export grades as CSV
 
 ## Demo
+
+[](https://www.youtube.com/watch?v=Cs-UpLl7oaU)
 
 ---
 
