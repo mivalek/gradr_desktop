@@ -16,7 +16,13 @@
           "**/*"
         ]
       }
-    ]
+    ],
+    "mac": {
+      "icon": "build/icon.icns"
+    },
+    "win": {
+      "icon": "build/icon.png"
+    }
   },
   "scripts": {
     "format": "prettier --write .",
