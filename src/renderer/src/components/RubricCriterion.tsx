@@ -1,4 +1,4 @@
-import { Component, For, Show, createSignal } from 'solid-js'
+import { Component, For, Show, createEffect, createSignal } from 'solid-js'
 import { TextField, TextFieldRoot } from './ui/textfield'
 import { TextArea } from './ui/textarea'
 import { TRubricCriterion, TRubricStore } from '@shared/types'
@@ -15,17 +15,21 @@ type TRubricCriterionProps = {
 }
 
 export const RubricCriterion: Component<TRubricCriterionProps> = (props) => {
-  const { criterion, setRubricStore } = props
-  const [name, setName] = createSignal(criterion.name)
-  const [weight, setWeight] = createSignal(criterion.weight.toString())
-  const [description, sedivescription] = createSignal(criterion.description)
+  const [name, setName] = createSignal('')
+  const [weight, setWeight] = createSignal('')
+  const [description, setDescription] = createSignal('')
 
+  createEffect(() => {
+    setName(props.criterion.name)
+    setWeight(props.criterion.weight.toString())
+    setDescription(props.criterion.description)
+  })
   function handleRemove() {
-    setRubricStore('criteria', (crit) => crit.filter((_, i) => i !== criterion.index))
+    props.setRubricStore('criteria', (crit) => crit.filter((_, i) => i !== props.criterion.index))
   }
 
   function setCriterionProperty(prop: keyof TRubricCriterion, value: string) {
-    setRubricStore('criteria', [criterion.index as number], prop, value)
+    props.setRubricStore('criteria', [props.criterion.index as number], prop, value)
   }
 
   function validateWeight(input) {
@@ -52,14 +56,14 @@ export const RubricCriterion: Component<TRubricCriterionProps> = (props) => {
                   'background-color': `rgb(${colour}`,
                   'z-index': 10 - i()
                 }}
-              ></button>
+              />
             )
           }}
         </For>
         <div
           class="w-4 h-4 rounded-full z-20"
-          style={{ 'background-color': `rgb(${criterion.colour})` }}
-        ></div>
+          style={{ 'background-color': `rgb(${props.criterion.colour})` }}
+        />
       </div>
       <div class="p-1 text-center">c{props.criterionIndex + 1}</div>
       <TextFieldRoot
@@ -72,7 +76,7 @@ export const RubricCriterion: Component<TRubricCriterionProps> = (props) => {
       </TextFieldRoot>
       <TextFieldRoot
         value={description()}
-        onChange={sedivescription}
+        onChange={setDescription}
         onFocusOut={() => setCriterionProperty('description', description())}
       >
         <TextArea autoResize class="resize-none w-80 min-h-9 border-background bg-slate-700/60 " />
@@ -84,7 +88,12 @@ export const RubricCriterion: Component<TRubricCriterionProps> = (props) => {
             value={weight() === '0' ? '' : weight()}
             onChange={validateWeight}
             onFocusOut={() =>
-              setRubricStore('criteria', [criterion.index as number], 'weight', Number(weight()))
+              props.setRubricStore(
+                'criteria',
+                [props.criterion.index as number],
+                'weight',
+                Number(weight())
+              )
             }
           >
             <TextField class="border-background bg-slate-700/60" placeholder="-" />
@@ -92,7 +101,7 @@ export const RubricCriterion: Component<TRubricCriterionProps> = (props) => {
           <span>%</span>
         </div>
       </div>
-      <Show when={props.allowRemove} fallback={<div class="h-9 w-9"></div>}>
+      <Show when={props.allowRemove} fallback={<div class="h-9 w-9" />}>
         <RemoveButton
           onclick={handleRemove}
           class="remove-criterion opacity-60 hover:text-red-500 hover:bg-transparent"

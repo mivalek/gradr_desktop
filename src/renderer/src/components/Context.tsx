@@ -10,6 +10,7 @@ import {
 } from '@shared/types'
 import {
   Accessor,
+  JSX,
   Resource,
   Setter,
   createContext,
@@ -28,7 +29,11 @@ type TContext = {
   setCurrentFiles: Setter<string[]>
   selectedFile: Accessor<string | undefined>
   setSelectedFile: Setter<string | undefined>
-  setupProject: (dir: string, files: string[], config: any) => void
+  setupProject: (
+    dir: string,
+    files: string[],
+    config: TConfig & TFileStatus & { openedFile: string }
+  ) => void
   isFileLoaded: Accessor<boolean>
   setIsFileLoaded: Setter<boolean>
   configStore: TConfig
@@ -48,7 +53,7 @@ type TContext = {
 }
 export const Context = createContext<TContext>()
 
-export const ContextProvider = (props) => {
+export const ContextProvider = (props): JSX.Element => {
   const [currentId, setCurrentId] = createSignal<string>()
   const [currentDir, setCurrentDir] = createSignal<string>()
   const [currentFiles, setCurrentFiles] = createSignal<string[]>([])
@@ -61,7 +66,7 @@ export const ContextProvider = (props) => {
     dir: string,
     files: string[],
     config: TConfig & TFileStatus & { openedFile: string }
-  ) => {
+  ): void => {
     setCurrentDir(dir)
     setCurrentFiles(files)
     setConfigStore('rubric', config.rubric || { name: '', criteria: [] })
@@ -70,7 +75,7 @@ export const ContextProvider = (props) => {
     setFileStatusStore(fileStatus)
     setCurrentId()
   }
-  const closeProject = () => {
+  const closeProject = (): void => {
     const saved = window.api.saveProjectConfig({
       ...unwrap(configStore),
       ...unwrap(fileStatusStore)
@@ -128,15 +133,15 @@ export const ContextProvider = (props) => {
   const [loadedData, setLoadedData] = createSignal<{
     comments: TComment[]
     marks:
-      | {}
+      | object
       | {
           [key: string]: number
         }
     generalComments: string
   }>({ comments: [], marks: {}, generalComments: '' })
-  const grades = () => gradeStore.grades
+  const grades = (): TGrades => gradeStore.grades
 
-  const isRubric = () => Object.values(configStore.rubric.criteria).length !== 0
+  const isRubric = (): boolean => Object.values(configStore.rubric.criteria).length !== 0
   const [resource] = createResource(selectedFile, async (file) => {
     const { content, gradrData } = await window.api.openFile(file)
     const parsedGradrData: TGradrData = gradrData.length
@@ -161,7 +166,7 @@ export const ContextProvider = (props) => {
     setCurrentFiles(files)
   })
 
-  const markFileAsDone = (what: Part<TFileStatus>, done: boolean) => {
+  const markFileAsDone = (what: Part<TFileStatus>, done: boolean): void => {
     const file = selectedFile()!
     if (done) {
       setFileStatusStore(what, (com) => [...com.filter((c) => c !== file), file])
@@ -170,7 +175,7 @@ export const ContextProvider = (props) => {
     }
   }
 
-  const compareGrades = () => {
+  const compareGrades = (): boolean => {
     const { marks } = loadedData()
     const origCrit = Object.keys(marks)
     const currentCrit = Object.keys(gradeStore.grades)
@@ -180,7 +185,7 @@ export const ContextProvider = (props) => {
       origCrit.some((crit) => marks[crit] !== gradeStore.grades[crit])
     )
   }
-  const compareComments = () => {
+  const compareComments = (): boolean => {
     const { comments } = loadedData()
     if (comments.length !== commentStore.comments.length) return true
     if (comments.length === 0) return false
@@ -191,7 +196,7 @@ export const ContextProvider = (props) => {
     }
     return false
   }
-  const hasDocChanged = () => {
+  const hasDocChanged = (): boolean => {
     const { generalComments } = loadedData()
     const haveGradesChanged = compareGrades()
     const haveGeneralCommentsChanged = generalComments !== gradeStore.generalComments

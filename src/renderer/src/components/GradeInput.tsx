@@ -11,7 +11,7 @@ type TGradeInput = {
 export const GradeInput: Component<TGradeInput> = (props) => {
   const [input, setInput] = createSignal('')
   createEffect(() => setInput(props.grade?.toString() || ''))
-  const validateInput = (value: string) => {
+  const validateInput = (value: string): void => {
     if (!value.length) {
       setInput(value)
       return

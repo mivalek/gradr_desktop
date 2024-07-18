@@ -19,7 +19,7 @@ export const IntroScreen: Component = () => {
     setupProject(dir, files, config)
   }
 
-  const isDirSelected = () => currentDir() && currentDir()!.length
+  const isDirSelected = (): number | '' | undefined => currentDir() && currentDir()!.length
   return (
     <div
       class={

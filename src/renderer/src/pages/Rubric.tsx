@@ -99,7 +99,7 @@ export const Rubric: Component = () => {
   return (
     <>
       <div id="titleBarContainer" class="absolute top-0 w-full">
-        <div id="titleBar" class="draggable h-[30px] bg-transparent"></div>
+        <div id="titleBar" class="draggable h-[30px] bg-transparent" />
       </div>
       <div
         id="rubric-editor"
@@ -121,7 +121,7 @@ export const Rubric: Component = () => {
             style={{ 'grid-template-columns': 'repeat(6, auto)' }}
           >
             <div class="grid grid-cols-subgrid col-span-5 justify-center text-center">
-              <div></div>
+              <div />
               <div>Label</div>
               <div>Criterion name</div>
               <div>Description</div>

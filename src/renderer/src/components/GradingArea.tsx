@@ -11,7 +11,7 @@ export const GradingArea: Component<TGradingAreaProps> = (props) => {
     useContext(Context)!
   const [generalComments, setGeneralComments] = createSignal('')
   const [isActive, setIsActive] = createSignal(true)
-  const finalGrade = () => calculateFinalGrade(grades())
+  const finalGrade = (): number | undefined => calculateFinalGrade(grades())
   let textAreaRef!: HTMLTextAreaElement
   let ghostRef!: HTMLDivElement
   createEffect(() => {
@@ -39,7 +39,7 @@ export const GradingArea: Component<TGradingAreaProps> = (props) => {
     ghostRef.innerHTML = `${generalComments().replaceAll('\n', '<br>')}<br>x`
     textAreaRef.style.maxHeight = ghostRef.clientHeight + 'px'
   })
-  const calculateFinalGrade = (grades: TGrades) => {
+  const calculateFinalGrade = (grades: TGrades): number | undefined => {
     const gradesArray = Object.values(grades)
     if (!gradesArray.length) return undefined
     const rubricCriteria = configStore.rubric.criteria
@@ -88,7 +88,7 @@ export const GradingArea: Component<TGradingAreaProps> = (props) => {
       >
         <SolidMarkdown
           remarkPlugins={[remarkMath]}
-          // @ts-ignore:
+          // @ts-ignore: no types for rehypeKatex
           rehypePlugins={[rehypeKatex]}
           class="gradr-rendered-markdown py-0.5 px-[7px] h-full overflow-auto"
           children={generalComments()}
@@ -114,7 +114,7 @@ export const GradingArea: Component<TGradingAreaProps> = (props) => {
         ref={ghostRef}
         aria-hidden="true"
         class="absolute text-sm left-[10000px] h-fit py-0 px-2 "
-      ></div>
+      />
       <div id="gradr-grades-export" class="hidden">
         <div class="gradr-container">
           <Show when={generalComments() !== ''}>
@@ -122,7 +122,7 @@ export const GradingArea: Component<TGradingAreaProps> = (props) => {
               <h2>Feedback</h2>
               <SolidMarkdown
                 remarkPlugins={[remarkMath]}
-                // @ts-ignore:
+                // @ts-ignore: no types for rehypeKatex
                 rehypePlugins={[rehypeKatex]}
                 class="gradr-rendered-markdown p-0.5"
                 children={generalComments()}
@@ -139,7 +139,10 @@ export const GradingArea: Component<TGradingAreaProps> = (props) => {
                   {(criterion) => (
                     <div
                       class="gradr-grade"
-                      style={`background: rgb(${criterion.colour}); border-color: rgb(${criterion.colour});`}
+                      style={{
+                        background: `rgb(${criterion.colour})`,
+                        'border-color': `rgb(${criterion.colour})`
+                      }}
                     >
                       <div class="gradr-crit-name">
                         {criterion.name}

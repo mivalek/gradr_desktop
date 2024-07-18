@@ -9,7 +9,7 @@ type ButtonProps = {
 }
 export const CloseButton: Component<ButtonProps> = (props) => {
   return (
-    <button class={props.class} onclick={props.onclick} aria-label={props.label || 'close'}>
+    <button class={props.class} onClick={props.onclick} aria-label={props.label || 'close'}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width={props.size}

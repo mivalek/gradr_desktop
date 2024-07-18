@@ -30,6 +30,7 @@ import rehypeKatex from 'rehype-katex'
 import remarkMath from 'remark-math'
 
 declare module 'solid-js' {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX {
     interface CustomEvents {
       // on:Name
@@ -52,17 +53,17 @@ type CommentProps = {
 }
 
 export const Comment: Component<CommentProps> = (props) => {
-  const { comment, setCommentStore, rubric } = props
+  const comment = (): TComment => props.comment
   const { setCurrentId } = useContext(Context)!
-  const [content, setContent] = createSignal(comment.content)
-  const [commentType, setCommentType] = createSignal(comment.type)
+  const [content, setContent] = createSignal(comment().content)
+  const [commentType, setCommentType] = createSignal(comment().type)
   const [isHovered, setIsHovered] = createSignal(false)
   const [suggestionMenu, setSuggestionMenu] = createSignal(false)
 
   let commentRef!: HTMLDivElement
 
-  const isActive = () => props.currentId === comment.id
-  const placeholderText = () =>
+  const isActive = (): boolean => props.currentId === comment().id
+  const placeholderText = (): string =>
     props.isOnlyComment
       ? `Comments **support** _markdown_ and $maths$.
 
@@ -72,16 +73,22 @@ Type @ at the beginning of a comment for comment type dropdown menu.
       
 You can also type the label of comment category (good, attn, prob) or rubric criterion (c1, c2, ...) at the beginning to set comment type.`
       : ''
-  const autoResize = () => !(props.isOnlyComment && !content().length)
-  const criterion = () => props.basicTypes.concat(rubric).find((c) => c.label === commentType())
+  const autoResize = (): boolean => !(props.isOnlyComment && !content().length)
+  const criterion = ():
+    | {
+        name: string
+        label: string
+        colour: string
+      }
+    | undefined => props.basicTypes.concat(props.rubric).find((c) => c.label === commentType())
   createEffect(() => {
-    if (props.currentId !== comment.id) return
+    if (props.currentId !== comment().id) return
     const textArea = commentRef.querySelector('textarea')!
     textArea.focus()
     textArea.addEventListener('blur', (e) => {
       const relatedTarget = e.relatedTarget
       if (suggestionMenu()) return
-      if (relatedTarget && (relatedTarget as HTMLElement).dataset.id === comment.id) {
+      if (relatedTarget && (relatedTarget as HTMLElement).dataset.id === comment().id) {
         textArea.focus()
         return
       }
@@ -89,18 +96,18 @@ You can also type the label of comment category (good, attn, prob) or rubric cri
     })
   })
   createEffect(() =>
-    setCommentStore('comments', (com) => com.id === comment.id, 'type', commentType())
+    props.setCommentStore('comments', (com) => com.id === comment().id, 'type', commentType())
   )
-  const setCommentAndHighlightType = (type: string) => {
+  const setCommentAndHighlightType = (type: string): void => {
     setCommentType(type)
-    document.querySelectorAll(`.gradr-hl[data-id='${comment.id}']`).forEach((highlight) => {
+    document.querySelectorAll(`.gradr-hl[data-id='${comment().id}']`).forEach((highlight) => {
       const hl = highlight as HTMLElement
       hl.className = `gradr-hl gradr-crit-${type}`
     })
     positionComments()
   }
-  const validateComment = (content: string) => {
-    for (let c of props.basicTypes.concat(rubric)) {
+  const validateComment = (content: string): void => {
+    for (const c of props.basicTypes.concat(props.rubric)) {
       if (content.startsWith(`${c.label}`)) {
         const regex = new RegExp(`^${c.label}`)
         content = content.replace(regex, '')
@@ -111,13 +118,13 @@ You can also type the label of comment category (good, attn, prob) or rubric cri
     setSuggestionMenu(content.startsWith('@'))
     setContent(content)
   }
-  const removeComment = async () => {
+  const removeComment = async (): Promise<void> => {
     await setCurrentId()
-    removeHighlight(comment.id)
-    setCommentStore('comments', (com) => com.filter((c) => c.id !== comment.id))
+    removeHighlight(comment().id)
+    props.setCommentStore('comments', (com) => com.filter((c) => c.id !== comment().id))
   }
 
-  const finaliseComment = () => {
+  const finaliseComment = (): void => {
     const thisContent = content().trim()
     if (!thisContent.length) {
       removeComment()
@@ -125,21 +132,21 @@ You can also type the label of comment category (good, attn, prob) or rubric cri
     }
     setCurrentId()
     setContent(thisContent)
-    setCommentStore('comments', (com) => com.id === comment.id, {
+    props.setCommentStore('comments', (com) => com.id === comment().id, {
       content: thisContent,
       type: commentType()
     })
     positionComments()
   }
-  const handleCriterionSelect = (crit?: string) => {
+  const handleCriterionSelect = (crit?: string): void => {
     if (crit) setCommentAndHighlightType(crit)
     setContent((prev) => prev.replace(/^@/, ''))
   }
-  const handleMenuClose = (close: boolean) => {
+  const handleMenuClose = (close: boolean): void => {
     focusOnTextArea()
     setSuggestionMenu(close)
   }
-  const focusOnTextArea = () => {
+  const focusOnTextArea = (): void => {
     const textArea = commentRef.querySelector('textarea')!
     textArea.focus()
   }
@@ -160,24 +167,24 @@ You can also type the label of comment category (good, attn, prob) or rubric cri
         'gradr-crit-' +
         commentType()
       }
-      data-id={comment.id}
+      data-id={comment().id}
       onClick={() => {
-        setCurrentId(comment.id)
+        setCurrentId(comment().id)
       }}
-      onpointerenter={() => {
+      onPointerEnter={() => {
         setIsHovered(true)
-        toggleActiveComment(comment.id)
+        toggleActiveComment(comment().id)
         positionComments()
       }}
-      onpointerleave={() => {
+      onPointerLeave={() => {
         setIsHovered(false)
-        toggleActiveComment(comment.id, true)
+        toggleActiveComment(comment().id, true)
         positionComments()
       }}
       on:keydown={(e) => {
         if (e.key === 'Enter' && e.ctrlKey) {
           e.preventDefault()
-          setCurrentId(comment.id)
+          setCurrentId(comment().id)
         }
       }}
     >
@@ -198,7 +205,7 @@ You can also type the label of comment category (good, attn, prob) or rubric cri
             fallback={
               <SolidMarkdown
                 remarkPlugins={[remarkMath]}
-                // @ts-ignore:
+                // @ts-ignore: no type for rehypeKatex
                 rehypePlugins={[rehypeKatex]}
                 class="gradr-rendered-markdown p-0.5"
                 children={content()}
@@ -220,16 +227,13 @@ You can also type the label of comment category (good, attn, prob) or rubric cri
               />
             </TextFieldRoot>
             <DropdownMenu open={suggestionMenu()} onOpenChange={handleMenuClose} modal={false}>
-              <DropdownMenuTrigger
-                aria-hidden
-                class="absolute top-8 left-3 invisible"
-              ></DropdownMenuTrigger>
+              <DropdownMenuTrigger aria-hidden class="absolute top-8 left-3 invisible" />
               <DropdownMenuContent
                 class="z-[2000] p-0 rounded-none focus-visible:ring-0"
                 onPointerDownOutside={() => handleCriterionSelect()}
                 onEscapeKeyDown={() => handleCriterionSelect()}
               >
-                <For each={props.basicTypes.filter((t) => t.label !== 'cmnt').concat(rubric)}>
+                <For each={props.basicTypes.filter((t) => t.label !== 'cmnt').concat(props.rubric)}>
                   {(crit) => (
                     <DropdownMenuItem
                       class="text-sm p-1 rounded-none bg-slate-50 text-background"
@@ -257,7 +261,7 @@ You can also type the label of comment category (good, attn, prob) or rubric cri
                   <Tooltip>
                     <TooltipTrigger>
                       <button
-                        data-id={comment.id} // needed to return focus to textarea  when clicked (line 89 above)
+                        data-id={comment().id} // needed to return focus to textarea  when clicked (line 89 above)
                         on:click={(e) => {
                           e.stopPropagation()
                           setCommentAndHighlightType(
@@ -266,7 +270,7 @@ You can also type the label of comment category (good, attn, prob) or rubric cri
                         }}
                         class="h-4 w-4 rounded-full"
                         style={{ 'background-color': `rgb(${type.colour})` }}
-                      ></button>
+                      />
                     </TooltipTrigger>
                     <TooltipContent class="shadow-sm shadow-slate-500 z-[1000]">
                       <p class="p-0">{type.name}</p>
@@ -276,12 +280,12 @@ You can also type the label of comment category (good, attn, prob) or rubric cri
               </For>
             </div>
             <div class="flex gap-1">
-              <For each={rubric}>
+              <For each={props.rubric}>
                 {(crit) => (
                   <Tooltip>
                     <TooltipTrigger>
                       <button
-                        data-id={comment.id} // needed to return focus to textarea  when clicked (line 89 above)
+                        data-id={comment().id} // needed to return focus to textarea  when clicked (line 89 above)
                         on:click={(e) => {
                           e.stopPropagation()
                           setCommentAndHighlightType(
@@ -290,7 +294,7 @@ You can also type the label of comment category (good, attn, prob) or rubric cri
                         }}
                         class="h-4 w-4 rounded-full"
                         style={{ 'background-color': `rgb(${crit.colour})` }}
-                      ></button>
+                      />
                     </TooltipTrigger>
                     <TooltipContent class="shadow-sm shadow-slate-500 z-[1000]">
                       <p class="p-0">{crit.name}</p>

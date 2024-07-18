@@ -3,7 +3,7 @@ import '../assets/loader.css'
 export const LoadingSpinner: Component = () => {
   return (
     <div class="flex h-full items-center justify-center col-span-2">
-      <span class="loader"></span>
+      <span class="loader" />
     </div>
   )
 }

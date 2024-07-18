@@ -35,7 +35,7 @@ export const Document: Component = () => {
       currentTarget: HTMLDivElement
       target: Element
     }
-  ) => {
+  ): void => {
     const userSelection = window.getSelection()
     const selectionRange = userSelection?.getRangeAt(0)
     const uuid = window.crypto.randomUUID()
@@ -68,7 +68,7 @@ export const Document: Component = () => {
     DocumentPanel.scroll(0, scrollTop)
   }
 
-  function handleHighlightClick(e: MouseEvent, id: string) {
+  function handleHighlightClick(e: MouseEvent, id: string): void {
     e.stopPropagation()
     setCurrentId(id)
   }
@@ -80,7 +80,7 @@ export const Document: Component = () => {
         id="file-container"
         class="h-fit p-2 m-2 bg-white shadow-md shadow-background select-text"
         onPointerUp={handlePointerUp}
-      ></div>
+      />
     </div>
   )
 }
