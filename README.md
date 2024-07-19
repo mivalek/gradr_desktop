@@ -13,28 +13,37 @@ I wished for a piece of software that would make it easy to import a grading rub
 > [!WARNING]
 > This software comes with no warranties whatsoever
 
-The simplest way of installing `gradR` is to download the installers for [Windows](), [MacOS](), or [Linux](). However, the beauty of open source software is that you can download the source code by cloning this GitHub repository and build the app yourself.
+Even if you don't have much experience with using open source software, the setup is not too involved.
 
-To do that, you will need to install [Node.js](https://nodejs.org/en) and [yarn](https://classic.yarnpkg.com/en/docs/install). Once you've done that, you can easily install all the dependency packages `gradR` uses by navigating to the directory where you cloned this repo in your shell/terminal of choice and running the command:
+1. Before you can run `gradR`, you need to build the app from the source code in this repository. For that, you will need [Node.js](https://nodejs.org/en) and a package manager, such as [yarn](https://classic.yarnpkg.com/en/docs/install).
 
-```bash
-$ yarn
-```
+2. Once you've installed the above, clone/download this repo.
 
-When the packages have installed, you can go ahead and build the app for your OS of choice with:
+3. Now, you can easily install all the dependency packages `gradR` uses by navigating to the directory where you cloned this repo in your shell/terminal of choice and running the command:
 
-```bash
-# For windows
-$ yarn build:win
+   ```bash
+   $ yarn
+   ```
 
-# For macOS
-$ yarn build:mac
+4. When the packages have installed, you can go ahead and build the app for your OS of choice with:
 
-# For Linux
-$ yarn build:linux
-```
+   ```bash
+   # For windows
+   $ yarn build:win
 
-This will create a `dist` folder in your directory where you will find the installer file.
+   # For macOS
+   $ yarn build:mac
+
+   # For Linux
+   $ yarn build:linux
+   ```
+
+5. This will create a `dist` folder in your directory where you will find the installer file.
+
+If you really want to avoid building the app yourself, you can download the installer file for:
+
+- [Windows](https://github.com/mivalek/gradR_installers/raw/main/win/gradr%20Setup%201.0.0.exe)
+- more to come...
 
 ## Features
 
@@ -49,6 +58,8 @@ This will create a `dist` folder in your directory where you will find the insta
 - export grades as CSV
 
 ## Demo
+
+Here is a little video demonstration of what you can do in `gradR` (links to YouTube).
 
 [![gradR demo](https://mival.netlify.app/img/gradR_demo_pic.png)](https://www.youtube.com/watch?v=Cs-UpLl7oaU)
 
